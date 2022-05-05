@@ -1,12 +1,13 @@
-autocmd BufNewFile,BufRead *.cjson setlocal filetype=jsonc
-autocmd BufNewFile,BufRead coc-settings.json setlocal filetype=jsonc
-autocmd BufNewFile,BufRead *.jsonc setfiletype jsonc
-autocmd BufNewFile,BufRead .eslintrc.json setlocal filetype=jsonc
-autocmd BufNewFile,BufRead .babelrc setlocal filetype=jsonc
-autocmd BufNewFile,BufRead .jshintrc setlocal filetype=jsonc
-autocmd BufNewFile,BufRead .jslintrc setlocal filetype=jsonc
-autocmd BufNewFile,BufRead .mocharc.json setlocal filetype=jsonc
-autocmd BufNewFile,BufRead coffeelint.json setlocal filetype=jsonc
-autocmd BufNewFile,BufRead tsconfig.json setlocal filetype=jsonc
-autocmd BufNewFile,BufRead jsconfig.json setlocal filetype=jsonc
-autocmd BufNewFile,BufRead */.vscode/*.json setlocal filetype=jsonc
+au     BufNewFile,BufRead *.jsonc           setfiletype jsonc
+au     BufNewFile,BufRead coc-settings.json setl filetype=jsonc
+au     BufNewFile,BufRead */.vscode/*.json  setl filetype=jsonc
+au     BufNewFile,BufRead tsconfig.json     setl filetype=jsonc
+au     BufNewFile,BufRead jsconfig.json     setl filetype=jsonc
+
+" au     BufNewFile,BufRead *.cjson           setl filetype=jsonc
+" au     BufNewFile,BufRead .eslintrc.json    setl filetype=jsonc
+" au     BufNewFile,BufRead .babelrc          setl filetype=jsonc
+" au     BufNewFile,BufRead .jshintrc         setl filetype=jsonc
+" au     BufNewFile,BufRead .jslintrc         setl filetype=jsonc
+" au     BufNewFile,BufRead .mocharc.json     setl filetype=jsonc
+" au     BufNewFile,BufRead coffeelint.json   setl filetype=jsonc

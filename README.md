@@ -10,20 +10,6 @@ Install
 
 		NeoBundle 'neoclide/jsonc.vim'
 
-*  [Vundle](https://github.com/gmarik/vundle)
-
-		Plugin 'neoclide/jsonc.vim'
-
-*  [Pathogen](https://github.com/tpope/vim-pathogen)
-
-		$ git clone https://github.com/neoclide/jsonc.vim ~/.vim/bundle
-
-*  [VAM](https://github.com/MarcWeber/vim-addon-manager)
-
-		call vam#ActivateAddons(['jsonc.vim'])
-
-*  Manual
-
 		copy all of the files into your `~/.vim` directory
 
 

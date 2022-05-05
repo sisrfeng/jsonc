@@ -1,57 +1,96 @@
-" Syntax setup {{{1
-if exists('b:current_syntax') && b:current_syntax == 'jsonc'
-  finish
-endif
+" 没有base on  https://github.com/elzr/vim-json
 
-" Syntax: Strings {{{1
-syn region  jsoncString    start=+"+  skip=+\\\\\|\\"+  end=+"+  contains=jsoncEscape
-syn region  jsoncString    start=+'+  skip=+\\\\\|\\'+  end=+'+  contains=jsoncEscape
+if exists('b:current_syntax')
+    if b:current_syntax == 'jsonc'
+        " 强行把json变jsonc?
+        finish
+    en
+en
 
-" Syntax: JSON Keywords {{{1
+" from json.vim
+    hi def link jsonNoise			Noise
+      syntax match   jsonNoise           /\v%(:|,)/
+
+
+    syn region  jsonStringSQError oneline  start=+'+  skip=+\\\\\|\\"+  end=+'+
+        " JSON does not allow strings with single quotes
+
+
+
+" Escape sequences
+hi def link jcEscape             Special
+    syn match   jcEscape    "\\["\\/bfnrt]" contained
+    syn match   jcEscape    "\\u\x\{4}" contained
+
+
+
+
+
+" Strings
+hi def link jcString        String
+    syn region  jcString    start=+"+  skip=+\\\\\|\\"+  end=+"+  contains=jcEscape
+    syn region  jcString    start=+'+  skip=+\\\\\|\\'+  end=+'+  contains=jcEscape
+
+" JSON Keywords
+hi def link jcStr       Label
+    syn match  jcStr /"\([^"]\|\\\"\)\+"[[:blank:]\r\n]*\:/ contains=jsonKeyword
+    syn region jcStr      oneline matchgroup=jsonQuote start=/"/  skip=/\v\\\\|\\"/  end=/"/  concealends contains=jsonEscape contained
+                                                                    " skip掉  \\或\"
+
+                                 hi def link jsonQuote   Quote
+
+    syn match   jsonEscape    "\\["\\/bfnrt]" contained
+                            " \"  \/  \\  \b  \f  \n  \r  \t
+    syn match   jsonEscape    "\\u\x\{4}" contained
+                              " \uXXXX
+    hi def link jsonEscape		Special
+
+
+" Strings
 " Separated into a match and region because a region by itself is always greedy
-syn match  jsoncKeywordMatch /"\([^"]\|\\\"\)\+"[[:blank:]\r\n]*\:/ contains=jsonKeyword
+    syn match  jsonStringMatch /"\v([^"]|\\\")+"\ze[\r[:blank:]\n]*[,}\]]/ contains=jsonString
+                                " "adsf\"asdfasdfasd "
+                                                                    " ,
+                                                                    " }
+                                                                    " ]
+                                "\v([^"]|\\\")+"[\r[:blank:]\n]*\:
 
-" Syntax: Escape sequences
-syn match   jsoncEscape    "\\["\\/bfnrt]" contained
-syn match   jsoncEscape    "\\u\x\{4}" contained
+" Numbers
+    syn match   jcNumber    "-\=\<\%(0\|[1-9]\d*\)\%(\.\d\+\)\=\%([eE][-+]\=\d\+\)\=\>"
+    syn keyword jcNumber    Infinity -Infinity
 
-" Syntax: Numbers {{{1
-syn match   jsoncNumber    "-\=\<\%(0\|[1-9]\d*\)\%(\.\d\+\)\=\%([eE][-+]\=\d\+\)\=\>"
-syn keyword jsoncNumber    Infinity -Infinity
+" An 01.2 04.1等
+    syn match   jcNumError  "\v-=<0\d\.\d*>"
 
-" Syntax: An integer part of 0 followed by other digits is not allowed.
-syn match   jsoncNumError  "-\=\<0\d\.\d*\>"
+" Boolean
+    syn keyword jcBoolean   true false
 
-" Syntax: Boolean {{{1
-syn keyword jsoncBoolean   true false
+" Null
+    syn keyword jcNull      null
 
-" Syntax: Null {{{1
-syn keyword jsoncNull      null
+" Braces
+    syn match   jcBraces	   "[{}\[\]]"
+    syn match   jcObjAssign /@\?\%(\I\|\$\)\%(\i\|\$\)*\s*\ze::\@!/
 
-" Syntax: Braces {{{1
-syn match   jsoncBraces	   "[{}\[\]]"
-syn match   jsoncObjAssign /@\?\%(\I\|\$\)\%(\i\|\$\)*\s*\ze::\@!/
+" Comment
+hi def link jcLineComment        Comment
+    syn region  jcLineComment    start=+\/\/+ end=+$+ keepend
+                                         " // 注释
+    syn region  jcLineComment    start=+^\s*\/\/+ skip=+\n\s*\/\/+ end=+$+ keepend fold
 
-" Syntax: Comment {{{1
-syn region  jsoncLineComment    start=+\/\/+ end=+$+ keepend
-syn region  jsoncLineComment    start=+^\s*\/\/+ skip=+\n\s*\/\/+ end=+$+ keepend fold
-syn region  jsoncComment        start="/\*"  end="\*/" fold
+hi def link jcComment            Comment
+    syn region  jcComment        start="/\*"  end="\*/" fold
+                                        " /* c风格注释  */
 
-" Define the default highlighting. {{{1
-hi def link jsoncString             String
-hi def link jsoncObjAssign          Identifier
-hi def link jsoncEscape             Special
-hi def link jsoncNumber             Number
-hi def link jsoncBraces             Operator
-hi def link jsoncNull               Function
-hi def link jsoncBoolean            Boolean
-hi def link jsoncLineComment        Comment
-hi def link jsoncComment            Comment
-hi def link jsoncNumError           Error
-hi def link jsoncKeywordMatch       Label
+" Define the default highlighting.
+    hi def link jcObjAssign          Identifier
+    hi def link jcNumber             Number
+    hi def link jcBraces             Operator
+    hi def link jcNull               Function
+    hi def link jcBoolean            Boolean
+    hi def link jcNumError           Error
 
 if !exists('b:current_syntax')
-  let b:current_syntax = 'jsonc'
-endif
+    let b:current_syntax = 'jsonc'
+en
 
-" vim: fdm=marker
